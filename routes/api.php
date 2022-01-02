@@ -22,10 +22,12 @@ use App\Http\Controllers\TransactionController;
 Route::post('/login', [UserController::class, 'authenticate']);
 Route::post('/create_user', [UserController::class, 'register']);
 
-Route::group(['middleware' => 'jwt.verify'], function() {
-    Route::get('/balance_read', [TransactionController::class, 'balanceRead']);
-    Route::get('/top_transactions_per_user', [TransactionController::class, 'topTransactionsUser']);
-    Route::get('/top_users', [TransactionController::class, 'topUsersTransaction']);
-    Route::post('/transfer', [TransactionController::class, 'transfer']);
-    Route::post('/balance_topup', [TransactionController::class, 'balanceTopup']);
+Route::prefix('/transaction')->group(function () {
+    Route::middleware(['jwt.verify'])->group(function () {
+        Route::get('/balance_read', [TransactionController::class, 'balanceRead']);
+        Route::get('/top_transactions_per_user', [TransactionController::class, 'topTransactionsUser']);
+        Route::get('/top_users', [TransactionController::class, 'topUsersTransaction']);
+        Route::post('/transfer', [TransactionController::class, 'transfer']);
+        Route::post('/balance_topup', [TransactionController::class, 'balanceTopup']);
+    });
 });
